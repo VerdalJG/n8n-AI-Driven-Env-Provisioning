@@ -1,0 +1,40 @@
+name: Automation Request
+description: Request infrastructure or workflow automation
+title: "[Automation] "
+labels: ["triage"]
+assignees: []
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What do you want automated?
+      description: Describe the automation or environment you need.
+      placeholder: "Provision a dev environment with..."
+    validations:
+      required: true
+
+  - type: input
+    id: region
+    attributes:
+      label: Region
+      placeholder: "eu-west-3"
+    validations:
+      required: true
+
+  - type: textarea
+    id: ssh_key
+    attributes:
+      label: SSH Public Key
+      description: Paste your SSH public key (ssh-ed25519 or ssh-rsa)
+      render: shell
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Acknowledgement
+      options:
+        - label: I understand this will create cloud resources
+          required: true
