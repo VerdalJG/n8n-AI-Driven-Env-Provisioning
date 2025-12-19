@@ -28,5 +28,5 @@ body:
     attributes:
       label: Acknowledgement
       options:
-        - label: I understand this will create cloud resources
+        - label: I understand this will create AWS cloud resources
           required: true
