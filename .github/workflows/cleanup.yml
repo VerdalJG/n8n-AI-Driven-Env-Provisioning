@@ -8,14 +8,15 @@ jobs:
   destroy:
     name: Destroy Terraform Resources
     runs-on: ubuntu-latest
-    if: github.event.issue.number != null
+    if: >
+      contains(github.event.issue.labels.*.name, 'triage') &&
+      contains(github.event.issue.labels.*.name, 'automation-done')
 
     permissions:
       contents: read
       id-token: write   # required if using OIDC for AWS auth
 
     steps:
-      # 1. Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v5.0.1
 
@@ -35,7 +36,7 @@ jobs:
         working-directory: issues/${{ github.event.issue.number }}/terraform
         run: terraform destroy -auto-approve
 
-      # 6. Optional: Docker cleanup
+      # Optional: Docker cleanup
       # - name: Remove Docker images (optional)
       #   run: |
       #     docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
