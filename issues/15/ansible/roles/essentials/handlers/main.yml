@@ -1,0 +1,12 @@
+---
+- name: Start Docker service
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Start Nginx service
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
