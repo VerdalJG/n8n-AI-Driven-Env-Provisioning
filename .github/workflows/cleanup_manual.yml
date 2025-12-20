@@ -30,11 +30,11 @@ jobs:
 
       # ---------- TERRAFORM ----------
       - name: Terraform Init
-        working-directory: issues/${{ github.event.issue.number }}/terraform
+        working-directory: issues/${{ github.event.inputs.issue_number }}/terraform
         run: terraform init
 
       - name: Terraform Destroy
-        working-directory: issues/${{ github.event.issue.number }}/terraform
+        working-directory: issues/${{ github.event.inputs.issue_number }}/terraform
         run: terraform destroy -auto-approve
 
       # Optional: Docker cleanup
