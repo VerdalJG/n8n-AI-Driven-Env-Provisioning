@@ -1,0 +1,59 @@
+name: Provision Dev Environment
+
+on:
+  push:
+    paths:
+      - 'issues/**'
+
+concurrency:
+  group: terraform-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write   # required if using OIDC for AWS auth
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5.0.1
+
+      # ---------- AWS AUTH ----------
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::<ACCOUNT_ID>:role/github-actions-terraform
+          aws-region: eu-west-3
+
+      # ---------- TERRAFORM ----------
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: "1.13.4"
+
+      - name: Terraform Init
+        working-directory: issues/${{ github.event.issue.number }}/terraform
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: issues/${{ github.event.issue.number }}/terraform
+        run: terraform validate
+
+      - name: Terraform Apply
+        working-directory: issues/${{ github.event.issue.number }}/terraform
+        run: terraform apply -auto-approve
+
+      # ---------- POST-PROVISION ----------
+      - name: Label issue as automation-done
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['automation-done']
+            })
