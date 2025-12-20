@@ -42,6 +42,19 @@ jobs:
         working-directory: issues/${{ github.event.inputs.issue_number }}/terraform
         run: terraform destroy -auto-approve
 
+      # ---------- S3 BACKEND CLEANUP ----------
+      - name: Empty Terraform backend S3 bucket
+        run: |
+          BUCKET_NAME="dev-vfc-bucket-${{ github.event.inputs.issue_number }}"
+          aws s3 rm "s3://$BUCKET_NAME" --recursive || true
+
+      - name: Delete Terraform backend S3 bucket
+        run: |
+          BUCKET_NAME="dev-vfc-bucket-${{ github.event.inputs.issue_number }}"
+          aws s3api delete-bucket \
+            --bucket "$BUCKET_NAME" \
+            --region eu-west-3 || true
+
       # Optional: Docker cleanup
       # - name: Remove Docker images (optional)
       #   run: |
