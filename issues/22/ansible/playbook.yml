@@ -1,0 +1,5 @@
+---
+- name: Install docker and nginx
+  hosts: localhost
+  roles:
+    - essentials
