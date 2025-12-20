@@ -11,6 +11,7 @@ concurrency:
 
 jobs:
   provision:
+    if: contains(github.event.head_commit.message, 'chore(n8n) provision')
     runs-on: ubuntu-latest
 
     permissions:
@@ -20,6 +21,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5.0.1
+
+      - name: Extract issue number
+        id: issue
+        run: |
+          ISSUE=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} \
+            | grep '^issues/' \
+            | cut -d'/' -f2 \
+            | sort -u \
+            | head -n 1)
+      
+          if [ -z "$ISSUE" ]; then
+            echo "No issue directory detected"
+            exit 1
+          fi
+      
+          echo "issue_number=$ISSUE" >> $GITHUB_OUTPUT
 
       # ---------- AWS AUTH ----------
       - name: Configure AWS credentials
@@ -35,15 +52,15 @@ jobs:
           terraform_version: "1.13.4"
 
       - name: Terraform Init
-        working-directory: issues/${{ github.event.issue.number }}/terraform
+        working-directory: issues/${{ steps.issue.outputs.issue_number }}/terraform
         run: terraform init
 
       - name: Terraform Validate
-        working-directory: issues/${{ github.event.issue.number }}/terraform
+        working-directory: issues/${{ steps.issue.outputs.issue_number }}/terraform
         run: terraform validate
 
       - name: Terraform Apply
-        working-directory: issues/${{ github.event.issue.number }}/terraform
+        working-directory: issues/${{ steps.issue.outputs.issue_number }}/terraform
         run: terraform apply -auto-approve
 
       # ---------- POST-PROVISION ----------
@@ -54,6 +71,6 @@ jobs:
             await github.rest.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
+              issue_number: Number("${{ steps.issue.outputs.issue_number }}"),
               labels: ['automation-done']
             })
