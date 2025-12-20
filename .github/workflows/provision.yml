@@ -40,15 +40,19 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::588809963040:role/Github_Runner
           aws-region: eu-west-3
-
-      - name: Debug issue number
-        run: echo "Issue number is ${{ steps.extract_issue.outputs.issue_number }}"
       
       # ---------- TERRAFORM ----------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3.1.2
         with:
           terraform_version: "1.13.4"
+
+      - name: Create S3 bucket for Terraform state
+        run: |
+          aws s3api create-bucket \
+            --bucket dev-bucket_${{ steps.extract_issue.outputs.issue_number }} \
+            --region eu-west-3 \
+            --create-bucket-configuration LocationConstraint=eu-west-3
 
       - name: Terraform Init
         working-directory: issues/${{ steps.extract_issue.outputs.issue_number }}/terraform
