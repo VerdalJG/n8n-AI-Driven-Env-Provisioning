@@ -55,7 +55,7 @@ jobs:
             --create-bucket-configuration LocationConstraint=eu-west-3
 
       - name: Wait for S3 bucket propagation
-        run: sleep 15
+        run: sleep 120
 
       - name: Terraform Init
         working-directory: issues/${{ steps.extract_issue.outputs.issue_number }}/terraform
