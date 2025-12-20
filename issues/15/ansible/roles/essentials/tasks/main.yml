@@ -1,0 +1,8 @@
+---
+- name: Install apt packages
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - nginx
+    state: present
+    update_cache: yes
