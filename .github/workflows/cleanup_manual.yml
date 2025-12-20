@@ -1,0 +1,44 @@
+name: Cleanup on Workflow Dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to operate on'
+        required: true
+        default: '1'
+
+jobs:
+  destroy:
+    name: Destroy Terraform Resources
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write   # required if using OIDC for AWS auth
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5.0.1
+
+      # ---------- AWS AUTH ----------
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::588809963040:role/Github_Runner
+          aws-region: eu-west-3
+
+      # ---------- TERRAFORM ----------
+      - name: Terraform Init
+        working-directory: issues/${{ github.event.issue.number }}/terraform
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: issues/${{ github.event.issue.number }}/terraform
+        run: terraform destroy -auto-approve
+
+      # Optional: Docker cleanup
+      # - name: Remove Docker images (optional)
+      #   run: |
+      #     docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      #     docker rmi your-docker-image:tag || true
