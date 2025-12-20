@@ -29,6 +29,11 @@ jobs:
           aws-region: eu-west-3
 
       # ---------- TERRAFORM ----------
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: "1.13.4"
+      
       - name: Terraform Init
         working-directory: issues/${{ github.event.inputs.issue_number }}/terraform
         run: terraform init
