@@ -1,11 +1,24 @@
 ---
-- name: Install Docker
+- name: Install docker
   ansible.builtin.apt:
     name: docker.io
     state: present
     update_cache: yes
 
-- name: Install Nginx
+- name: Install nginx
   ansible.builtin.apt:
     name: nginx
     state: present
+    update_cache: yes
+
+- name: Enable docker service
+  ansible.builtin.service:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Enable nginx service
+  ansible.builtin.service:
+    name: nginx
+    enabled: yes
+    state: started
