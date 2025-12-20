@@ -51,15 +51,15 @@ jobs:
           terraform_version: "1.13.4"
 
       - name: Terraform Init
-        working-directory: issues/${{ steps.issue.outputs.issue_number }}/terraform
+        working-directory: issues/${{ steps.extract_issue.outputs.issue_number }}/terraform
         run: terraform init
 
       - name: Terraform Validate
-        working-directory: issues/${{ steps.issue.outputs.issue_number }}/terraform
+        working-directory: issues/${{ steps.extract_issue.outputs.issue_number }}/terraform
         run: terraform validate
 
       - name: Terraform Apply
-        working-directory: issues/${{ steps.issue.outputs.issue_number }}/terraform
+        working-directory: issues/${{ steps.extract_issue.outputs.issue_number }}/terraform
         run: terraform apply -auto-approve
 
       # ---------- POST-PROVISION ----------
@@ -70,6 +70,6 @@ jobs:
             await github.rest.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: Number("${{ steps.issue.outputs.issue_number }}"),
+              issue_number: Number("${{ steps.extract_issue.outputs.issue_number }}"),
               labels: ['automation-done']
             })
