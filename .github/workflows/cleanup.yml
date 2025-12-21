@@ -13,7 +13,7 @@ jobs:
       contains(github.event.issue.labels.*.name, 'automation-done')
 
     permissions:
-      contents: read
+      contents: write
       id-token: write   # required if using OIDC for AWS auth
 
     steps:
@@ -40,6 +40,26 @@ jobs:
       - name: Terraform Destroy
         working-directory: issues/${{ github.event.issue.number }}/terraform
         run: terraform destroy -auto-approve
+
+      # ---------- S3 BACKEND CLEANUP ----------
+      - name: Empty Terraform backend S3 bucket
+        run: |
+          BUCKET_NAME="dev-vfc-bucket-${{ github.event.inputs.issue_number }}"
+          aws s3 rm "s3://$BUCKET_NAME" --recursive || true
+
+      - name: Delete Terraform backend S3 bucket
+        run: |
+          BUCKET_NAME="dev-vfc-bucket-${{ github.event.inputs.issue_number }}"
+          aws s3api delete-bucket \
+            --bucket "$BUCKET_NAME" \
+            --region eu-west-3 || true
+
+      # ---------- Remove Terraform / Issue Directory ----------
+      - name: Delete Issue Directory
+        run: |
+          git rm -r issues/${{ github.event.inputs.issue_number }}
+          git commit -m "Cleanup: remove issues/${{ github.event.inputs.issue_number }}"
+          git push origin main
 
       # Optional: Docker cleanup
       # - name: Remove Docker images (optional)
