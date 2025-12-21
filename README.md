@@ -126,6 +126,24 @@ db_password = "n8n_dev_pass_${var.issue_number}"
 
 Developers can use these credentials to connect to the PostgreSQL instance provisioned in their dev environment.
 
+To connect to the PostgreSQL database using the `psql` client, use the following command:
+
+```bash
+psql -h <RDS_ENDPOINT_WITHOUT_PORT> -p <PORT> -U <USERNAME> -d postgresDevRds<IssueNumber>
+```
+
+- `-h <RDS_ENDPOINT_WITHOUT_PORT>`: The hostname of your RDS instance.  
+  **Important:** The endpoint you get in the issue comment may include the port, e.g., `mydb.abcdefg123.us-east-1.rds.amazonaws.com:5432`.  
+  `psql` cannot parse the port from the endpoint, so you must **remove the `:5432` part** from the host.  
+
+- `-p <PORT>`: The PostgreSQL port. Default is `5432`. This is where the port from the endpoint should be added.
+
+- `-U <USERNAME>`: The PostgreSQL user you want to connect as.  
+
+- `-d postgresDevRds<IssueNumber>`: The database name. Replace `<IssueNumber>` with the actual issue number relevant to your database.  
+
+- After running the command, `psql` will prompt you for the password of the specified user.
+
 ---
 
 ## Cleanup
@@ -157,6 +175,7 @@ Developers can use these credentials to connect to the PostgreSQL instance provi
 This workflow ensures a fully automated, reproducible dev environment for every issue request.
 
 ---
+
 
 
 
