@@ -1,0 +1,20 @@
+---
+- name: Ensure apt cache is up to date
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install Docker
+  ansible.builtin.apt:
+    name: docker.io
+    state: present
+
+- name: Install nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: Install postgresql-client
+  ansible.builtin.apt:
+    name: postgresql-client
+    state: present
