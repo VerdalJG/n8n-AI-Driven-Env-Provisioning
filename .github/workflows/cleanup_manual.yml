@@ -67,8 +67,15 @@ jobs:
           git commit -m "Cleanup: remove issues/${{ github.event.inputs.issue_number }}"
           git push origin main
 
-      # Optional: Docker cleanup
-      # - name: Remove Docker images (optional)
-      #   run: |
-      #     docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      #     docker rmi your-docker-image:tag || true
+      # ---------- Docker Cleanup ----------
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Remove Docker images (optional)
+        run: |
+          ISSUE_NUMBER=${{ github.event.inputs.issue_number }}
+          IMAGE_NAME="verdalvc/n8n-pss-dev-app:issue-$ISSUE_NUMBER"
+          docker rmi your-docker-image:tag || true
