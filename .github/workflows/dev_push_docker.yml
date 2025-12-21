@@ -94,5 +94,5 @@ jobs:
             # Run the new container
             sudo docker run -d \
               --name issue-$ISSUE_NUMBER \
-              -p 80:80 \
+              -p 8080:80 \
               $IMAGE_NAME
