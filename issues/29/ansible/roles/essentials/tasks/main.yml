@@ -1,0 +1,21 @@
+---
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - nginx
+      - postgresql-client
+    state: present
+    update_cache: yes
+
+- name: Ensure nginx service is started and enabled
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Ensure docker service is started and enabled
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
