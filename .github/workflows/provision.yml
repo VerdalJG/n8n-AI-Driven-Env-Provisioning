@@ -70,6 +70,24 @@ jobs:
         working-directory: issues/${{ steps.extract_issue.outputs.issue_number }}/terraform
         run: terraform apply -auto-approve
 
+      - name: Get EC2 Public IP
+        id: get_ec2_ip
+        working-directory: issues/${{ steps.extract_issue.outputs.issue_number }}/terraform
+        run: |
+          EC2_IP=$(terraform output -raw dev_ec2_public_ip)
+          echo "ec2_public_ip=$EC2_IP" >> $GITHUB_OUTPUT
+
+      - name: Comment with EC2 IP
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: Number("${{ steps.extract_issue.outputs.issue_number }}"),
+              body: `✅ Dev environment is ready!\n\nEC2 public IP: ${{ steps.get_ec2_ip.outputs.ec2_public_ip }}`
+            })
+
       # ---------- POST-PROVISION ----------
       - name: Label issue as automation-done
         uses: actions/github-script@v7
