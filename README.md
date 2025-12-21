@@ -30,7 +30,7 @@ Before using this repository, ensure you have:
 If you don’t already have an SSH key, generate one locally:
 
 ```bash
-ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f dev_key
 ```
 
 Add the public key (`~/.ssh/id_rsa.pub`) to the GitHub issue when prompted.
@@ -138,3 +138,4 @@ git push origin dev/issue-<ISSUE_NUMBER>
 This workflow ensures a fully automated, reproducible dev environment for every issue request.
 
 ---
+
