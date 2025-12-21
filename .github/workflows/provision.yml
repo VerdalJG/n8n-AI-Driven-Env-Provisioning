@@ -77,7 +77,14 @@ jobs:
           EC2_IP=$(terraform output -raw dev_ec2_public_ip)
           echo "ec2_public_ip=$EC2_IP" >> $GITHUB_OUTPUT
 
-      - name: Comment with EC2 IP
+      - name: Get RDS Endpoint
+        id: get_rds_endpoint
+        working-directory: issues/${{ steps.extract_issue.outputs.issue_number }}/terraform
+        run: |
+          RDS_ENDPOINT=$(terraform output -raw dev_rds_endpoint)
+          echo "rds_endpoint=$RDS_ENDPOINT" >> $GITHUB_OUTPUT
+
+      - name: Comment with EC2 IP and RDS endpoint
         uses: actions/github-script@v7
         with:
           script: |
@@ -85,7 +92,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: Number("${{ steps.extract_issue.outputs.issue_number }}"),
-              body: `✅ Dev environment is ready!\n\nEC2 public IP: ${{ steps.get_ec2_ip.outputs.ec2_public_ip }}`
+              body: `✅ Dev environment is ready!\n\nEC2 public IP: ${{ steps.get_ec2_ip.outputs.ec2_public_ip }}\nRDS endpoint: ${{ steps.get_rds_endpoint.outputs.rds_endpoint }}`
             })
 
       # ---------- POST-PROVISION ----------
