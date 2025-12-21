@@ -77,4 +77,4 @@ jobs:
         run: |
           ISSUE_NUMBER=${{ github.event.issue.number }}
           IMAGE_NAME="verdalvc/n8n-pss-dev-app:issue-$ISSUE_NUMBER"
-          docker rmi IMAGE_NAME || true
+          docker rmi $IMAGE_NAME || true
