@@ -92,7 +92,7 @@ jobs:
             sudo docker rm issue-$ISSUE_NUMBER || true
 
             # Run the new container
-            docker run -d \
+            sudo docker run -d \
               --name issue-$ISSUE_NUMBER \
               -p 80:80 \
-              $IMAGE_NAME:issue-$ISSUE_NUMBER
+              $IMAGE_NAME
