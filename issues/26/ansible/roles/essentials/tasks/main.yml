@@ -1,8 +1,0 @@
----
-- name: Install packages
-  ansible.builtin.package:
-    name:
-      - docker.io
-      - nginx
-      - postgresql-client
-    state: present

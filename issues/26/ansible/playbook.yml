@@ -1,5 +1,0 @@
----
-- name: Install docker and nginx and postgresql-client
-  hosts: localhost
-  roles:
-    - essentials
