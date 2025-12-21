@@ -9,6 +9,8 @@ on:
 jobs:
   docker-build-deploy:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
 
     steps:
       # ---------- 1. Checkout repo ----------
