@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write
       id-token: write   # required if using OIDC for AWS auth
 
     steps:
@@ -54,6 +54,13 @@ jobs:
           aws s3api delete-bucket \
             --bucket "$BUCKET_NAME" \
             --region eu-west-3 || true
+
+      # ---------- Remove Terraform / Issue Directory ----------
+      - name: Delete Issue Directory
+        run: |
+          git rm -r issues/${{ github.event.inputs.issue_number }}
+          git commit -m "Cleanup: remove issues/${{ github.event.inputs.issue_number }}"
+          git push origin main
 
       # Optional: Docker cleanup
       # - name: Remove Docker images (optional)
