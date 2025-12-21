@@ -79,5 +79,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: Number("${{ steps.extract_issue.outputs.issue_number }}"),
-              labels: ['automation-done']
+              labels: ['automation-completed']
             })
