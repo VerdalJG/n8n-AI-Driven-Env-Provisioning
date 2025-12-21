@@ -1,0 +1,9 @@
+---
+- name: Install docker, nginx and postgresql-client packages
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - nginx
+      - postgresql-client
+    state: present
+    update_cache: yes
