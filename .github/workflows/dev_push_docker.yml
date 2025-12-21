@@ -88,11 +88,11 @@ jobs:
             IMAGE_NAME="verdalvc/n8n-pss-dev-app:issue-$ISSUE_NUMBER"
 
             # Stop and remove previous container if exists
-            docker stop issue-$ISSUE_NUMBER || true
-            docker rm issue-$ISSUE_NUMBER || true
+            sudo docker stop issue-$ISSUE_NUMBER || true
+            sudo docker rm issue-$ISSUE_NUMBER || true
 
             # Run the new container
             docker run -d \
               --name issue-$ISSUE_NUMBER \
               -p 80:80 \
-              $IMAGE_NAME:latest
+              $IMAGE_NAME:issue-$ISSUE_NUMBER
