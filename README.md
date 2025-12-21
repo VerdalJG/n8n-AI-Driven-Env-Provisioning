@@ -109,6 +109,24 @@ git push origin dev/issue-<ISSUE_NUMBER>
 
 ---
 
+## PostgreSQL Access
+
+For each development environment, a PostgreSQL database is automatically provisioned. The database credentials follow a simple naming convention based on the issue number, which ensures uniqueness per environment:
+
+```hcl
+db_username = "n8n_dev_${var.issue_number}"
+db_password = "n8n_dev_pass_${var.issue_number}"
+```
+
+- `db_username`: The database username is generated using the issue number.  
+- `db_password`: The database password is similarly generated using the issue number.
+
+> **Note:** This credential generation method is intended for test and development purposes only. In a production or more secure setup, credentials should not be hardcoded or predictable. A proper implementation would send the credentials securely to the developer, for example via email or a secrets management system.  
+
+Developers can use these credentials to connect to the PostgreSQL instance provisioned in their dev environment.
+
+---
+
 ## Cleanup
 
 - **Automatic:** Closing the issue triggers GitHub Actions to clean up the environment.
@@ -138,4 +156,5 @@ git push origin dev/issue-<ISSUE_NUMBER>
 This workflow ensures a fully automated, reproducible dev environment for every issue request.
 
 ---
+
 
