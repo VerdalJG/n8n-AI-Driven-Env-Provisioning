@@ -71,7 +71,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           ISSUE_NUMBER=${{ steps.extract_issue.outputs.issue_number }}
-          IMAGE_NAME="VerdalVC/project:issue-$ISSUE_NUMBER"
+          IMAGE_NAME="verdalvc/project:issue-$ISSUE_NUMBER"
 
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
@@ -85,7 +85,7 @@ jobs:
           key: ${{ secrets.EC2_GITHUB_RUNNER_PRIVATE_KEY }}
           script: |
             ISSUE_NUMBER=${{ steps.extract_issue.outputs.issue_number }}
-            IMAGE_NAME="VerdalVC/project:issue-$ISSUE_NUMBER"
+            IMAGE_NAME="verdalvc/project:issue-$ISSUE_NUMBER"
 
             # Stop and remove previous container if exists
             docker stop issue-$ISSUE_NUMBER || true
