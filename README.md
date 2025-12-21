@@ -11,7 +11,8 @@ This repository automates the creation of development environments for your proj
   - [Step 1: Create an Issue](#step-1-create-an-issue)  
   - [Step 2: n8n Generates Code](#step-2-n8n-generates-code)  
   - [Step 3: GitHub Workflow Provisions Environment](#step-3-github-workflow-provisions-environment)  
-- [Developer Workflow](#developer-workflow)  
+- [Developer Workflow](#developer-workflow)
+- [PostgreSQL Access](#postgresql-access)  
 - [Cleanup](#cleanup)  
 - [Technical Overview](#technical-overview)  
 
@@ -156,5 +157,6 @@ Developers can use these credentials to connect to the PostgreSQL instance provi
 This workflow ensures a fully automated, reproducible dev environment for every issue request.
 
 ---
+
 
 
