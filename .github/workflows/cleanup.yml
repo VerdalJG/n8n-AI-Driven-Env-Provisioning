@@ -73,8 +73,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Remove Docker images (optional)
+      - name: Remove Docker images
         run: |
           ISSUE_NUMBER=${{ github.event.issue.number }}
           IMAGE_NAME="verdalvc/n8n-pss-dev-app:issue-$ISSUE_NUMBER"
+          docker pull $IMAGE_NAME || true
           docker rmi $IMAGE_NAME || true
