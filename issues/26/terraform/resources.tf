@@ -138,7 +138,7 @@ resource "aws_security_group" "rds_sg" {
   }
 }
 
-resource "aws_db_subnet_group" "rds_subnets" {
+resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds-subnet-${var.issue_number}"
   subnet_ids = [aws_subnet.public_subnet_1.id, aws_subnet.public_subnet_2.id]
 
@@ -160,9 +160,9 @@ resource "aws_db_instance" "postgresql" {
   password = var.db_password
   db_name  = "postgresDevRds${var.issue_number}"
 
-  db_subnet_group_name  = aws_db_subnet_group.rds_subnets.name
+  db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  skip_final_snapshot   = true
+  skip_final_snapshot    = true
 
   tags = {
     Name = "postgres_dev_rds_${var.issue_number}"
@@ -202,3 +202,4 @@ resource "aws_instance" "dev" {
     Name = "dev-ec2-${var.issue_number}"
   }
 }
+
